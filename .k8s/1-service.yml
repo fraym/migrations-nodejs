@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: migrations-nodejs
+  namespace: fraym
+spec:
+  type: ClusterIP
+  selector:
+    app: migrations-nodejs
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000

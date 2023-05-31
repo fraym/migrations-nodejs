@@ -1,0 +1,4 @@
+enum Permission {
+    ## add your permission names here
+    TEST_PERMISSION
+}

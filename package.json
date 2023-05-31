@@ -1,0 +1,46 @@
+{
+    "name": "@fraym/migrations",
+    "version": "0.1.0",
+    "license": "MIT",
+    "homepage": "https://github.com/fraym/migrations-nodejs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fraym/migrations-nodejs.git"
+    },
+    "description": "nodejs client implementation for our migrations service",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 0",
+        "format": "prettier --write \"**/*.{ts,tsx,json}\"",
+        "lint": "prettier --check \"**/*.{ts,tsx,json}\"",
+        "build": "npm run clean && tsc && chmod +x dist/cmd/migrations.js",
+        "clean": "rm -rf dist",
+        "prepublishOnly": "npm test && npm run lint && npm run build",
+        "preversion": "npm run lint",
+        "cmd": "dist/cmd/migrations.js"
+    },
+    "files": [
+        "dist/**/*"
+    ],
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "bin": {
+        "migrations": "dist/cmd/migrations.js"
+    },
+    "dependencies": {
+        "@graphql-tools/graphql-file-loader": "^7.5.16",
+        "@graphql-tools/load": "^7.8.13",
+        "dotenv": "^16.0.3",
+        "graphql": "^16.6.0",
+        "yargs": "^17.7.1"
+    },
+    "devDependencies": {
+        "@becklyn/prettier": "^1.0.2",
+        "@types/node": "^20.2.3",
+        "@types/uuid": "^9.0.1",
+        "@types/yargs": "^17.0.24",
+        "prettier": "^2.8.7",
+        "typescript": "^5.0.3",
+        "uuid": "^9.0.0"
+    },
+    "prettier": "@becklyn/prettier"
+}

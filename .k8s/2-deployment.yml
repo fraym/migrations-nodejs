@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: migrations-nodejs
+  namespace: fraym
+  labels:
+    app: migrations-nodejs
+spec:
+  selector:
+    matchLabels:
+      app: migrations-nodejs
+  template:
+    metadata:
+      labels:
+        app: migrations-nodejs
+    spec:
+      containers:
+        - name: migrations-nodejs
+          image: golang:alpine
+          imagePullPolicy: Never
+          command: ["sleep", "infinity"]

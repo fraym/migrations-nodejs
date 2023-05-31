@@ -1,0 +1,11 @@
+type CrudTestType @crudType @permission(all: [TEST_PERMISSION]) {
+    field: String!
+    self: CrudTestType! @index
+    projection: TestProjection! @index
+    enum: Enum
+    file: File
+}
+
+enum Enum {
+    VALUE_1
+}

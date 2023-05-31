@@ -1,0 +1,17 @@
+context: minikube
+
+name: migrations-nodejs
+
+dev:
+  migrations-nodejs:
+    image: node:18
+    imagePullPolicy: Never
+    namespace: fraym
+    command: bash
+
+    workdir: /code
+    sync:
+      - .:/code
+      - $HOME/.ssh:/root/.ssh
+    secrets:
+      - $HOME/.npmrc:/root/.npmrc

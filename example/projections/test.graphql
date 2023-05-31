@@ -1,0 +1,13 @@
+type TestProjection
+    @upsertOn(on: { eventTypes: ["testType"], topics: ["test"] }, identifyBy: { payload: ["id"] }) {
+    field: String! @index
+    self: TestProjection! @index
+    crud: CrudTestType! @index
+    nested: NestedType
+    enum: Enum
+}
+
+type NestedType {
+    field: Int
+    nested: NestedType
+}
