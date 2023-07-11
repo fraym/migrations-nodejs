@@ -29,6 +29,7 @@ directive @identifier on FIELD_DEFINITION
 directive @createdAt on FIELD_DEFINITION
 directive @changedAt on FIELD_DEFINITION
 directive @index on FIELD_DEFINITION
+directive @gdpr(default: Any, condition: String) on FIELD_DEFINITION
 directive @filterFromJwtData(key: String!) on FIELD_DEFINITION
 directive @validate(tags: [String!]!) repeatable on FIELD_DEFINITION
 directive @default(value: Any!) on FIELD_DEFINITION
