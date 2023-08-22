@@ -1,98 +1,37 @@
 #! /usr/bin/env node
-import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { loadSchema } from "@graphql-tools/load";
-import { newClient } from "../api/client";
 import { useConfig } from "./config";
-import { TypeDefinition, getTypeDefinition } from "./definition/typeDefinition";
-import { addNestedTypesToSchema } from "./nestedSchemaData";
+import { getMigrationFromSchema } from "../schema";
+import { replaceEnvPlaceholdersGraphQLFileLoader } from "./loader";
 
 const run = async () => {
-    const { schemaPointers, namespace, serverAddress, apiToken } = await useConfig();
+    const { schemaGlob, namespace /* dataMigrationsGlob, serverAddress, apiToken*/ } =
+        await useConfig();
 
-    const schema = await loadSchema(schemaPointers, {
-        loaders: [new GraphQLFileLoader()],
+    const schema = await loadSchema(schemaGlob, {
+        loaders: [replaceEnvPlaceholdersGraphQLFileLoader],
     });
+    const migration = getMigrationFromSchema(schema, namespace, false);
 
-    const definitions = getTypeDefinition(schema, namespace);
+    // @todo: what if something fails: rollback
+    // @todo: how to apply data transformations
 
-    await migrateSchemas(definitions, serverAddress, apiToken, namespace);
-};
+    // 1. use new schema for temp table
+    // 2. (crud) while migrating apply data transformation for every new state
 
-const replaceWithEnvData = (str: string): string => {
-    const regex = /{{env\.([a-zA-Z_]+)}}/g;
-    const matches = str.match(regex);
+    // wait cmd:
+    // while waiting listen for new data and transform it if needed
+    // echo current progress (x of y crud / projectuon types are migrated / unchanged)
 
-    const envData: Record<string, string> = {};
+    // finish cmd:
+    // transform rest of untransformed data, then switch new projecton live
 
-    matches?.forEach(match => {
-        const variable = match.replace("{{env.", "").replace("}}", "");
+    // data transformation:
+    // trigger transformation event
+    // if data is changed again: trigger new transformation event
+    // on rollback: trigger undo events (saved when creating the transformation events, deleted after successful migration)
 
-        if (!envData[variable]) {
-            envData[variable] = process.env[variable] ?? "";
-        }
-    });
-
-    let outputStr = str;
-
-    Object.keys(envData).forEach(key => {
-        outputStr = outputStr.replaceAll(`{{env.${key}}}`, envData[key]);
-    });
-
-    return outputStr;
-};
-
-const migrateSchemas = async (
-    definitions: Record<string, TypeDefinition>,
-    serverAddress: string,
-    apiToken: string,
-    namespace: string
-) => {
-    console.log(`Using Fraym migration server: ${serverAddress}\n`);
-
-    if (namespace) {
-        console.log(`Using namespace: ${namespace}\n`);
-    }
-
-    const client = await newClient({ serverAddress, apiToken });
-
-    const baseTypesToUse: string[] = [];
-    const nestedTypesToUse: string[] = [];
-    let upsertSchema = "";
-
-    Object.keys(definitions).forEach(newName => {
-        if (!definitions[newName].isBaseType) {
-            return;
-        }
-
-        baseTypesToUse.push(newName);
-        upsertSchema += `\n${definitions[newName].schema}`;
-
-        definitions[newName].nestedTypes.forEach(nestedTypeName => {
-            const nestedSchemaData = addNestedTypesToSchema(
-                definitions,
-                nestedTypeName,
-                nestedTypesToUse
-            );
-
-            if (nestedSchemaData.schema === "") {
-                return;
-            }
-
-            upsertSchema += `\n${nestedSchemaData.schema}`;
-            nestedSchemaData.nestedTypes.forEach(nestedType => {
-                if (!nestedTypesToUse.includes(nestedType)) {
-                    nestedTypesToUse.push(nestedType);
-                }
-            });
-        });
-    });
-
-    upsertSchema = replaceWithEnvData(upsertSchema);
-
-    console.log(`Migrating ${baseTypesToUse.length} types:`);
-    baseTypesToUse.forEach(type => console.log(`- ${type}`));
-
-    await client.migrate(upsertSchema, namespace);
+    console.log(JSON.stringify(migration));
 };
 
 run();

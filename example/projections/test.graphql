@@ -1,13 +1,46 @@
 type TestProjection
+    @permission(all: [])
     @upsertOn(on: { eventTypes: ["testType"], topics: ["test"] }, identifyBy: { payload: ["id"] }) {
     field: String! @index
-    self: TestProjection! @index
-    crud: CrudTestType! @index
     nested: NestedType
     enum: Enum
+    ref: CrudTestType
 }
 
 type NestedType {
     field: Int
     nested: NestedType
 }
+
+# # all directives can be used repeatedly
+# type Report @report(projections: ["TestProjection"], groupBy: { field: "field.selector" }) {
+# 	sum: Int! @sum(projection: "TestProjection". field: "field.selector", condition: "")
+# 	min: Int! @min(projection: "TestProjection". field: "field.selector", condition: "")
+# 	max: Int! @max(projection: "TestProjection". field: "field.selector", condition: "")
+# 	count: Int! @count(projection: "TestProjection", condition: "")
+# 	count: String! @get(projection: "TestProjection", field: "")
+# 	hard: string @value(expression)
+# }
+
+# ## swr approach??
+
+# sum of [{
+# 	elements: [{
+# 		elements: [{
+# 			obj: {
+# 				amount: 123
+# 			}
+# 		}]
+# 	}]
+# }]
+
+# - sum / avg / ... als int oder float
+
+# - average
+# - median
+# - length of array
+# - anzahl käufer (distinct sum)
+# - get sum in time interval (-x days / hours / months / years)
+# - hard set values
+# - summen pro ditix event + liste an tickets die dazu gehören (in gegebenem Zeitraum)
+# - global reports over all tenants (@global)
