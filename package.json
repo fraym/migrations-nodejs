@@ -12,11 +12,11 @@
 		"test": "echo \"Error: no test specified\" && exit 0",
 		"format": "prettier --write \"**/*.{ts,tsx,json}\"",
 		"lint": "prettier --check \"**/*.{ts,tsx,json}\"",
-		"build": "npm run clean && tsc && chmod +x dist/cmd/migrations.js",
+		"build": "npm run clean && tsc && chmod +x dist/cmd/cmd.js",
 		"clean": "rm -rf dist",
 		"prepublishOnly": "npm test && npm run lint && npm run build",
 		"preversion": "npm run lint",
-		"cmd": "dist/cmd/migrations.js"
+		"cmd": "dist/cmd/cmd.js"
 	},
 	"files": [
 		"dist/**/*"
@@ -24,7 +24,7 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"bin": {
-		"migrations": "dist/cmd/migrations.js"
+		"migration": "dist/cmd/cmd.js"
 	},
 	"dependencies": {
 		"@graphql-tools/import": "^7.0.0",

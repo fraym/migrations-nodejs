@@ -4,4 +4,5 @@ enum Permission {
     A
     B
     C
+    DDA
 }
