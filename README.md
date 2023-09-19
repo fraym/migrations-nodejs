@@ -14,7 +14,7 @@ Use the `migrations` cli command to automatically apply all your Fraym schemas t
 
 Your type schemas have to match the glob you specify in the `MIGRATIONS_SCHEMA_GLOB` env variable (default: `./src/**/*.graphql`).
 
-API: You can specify the address (and port) of the migrations service instance you use in the `MIGRATIONS_SERVER_ADDRESS` env variable (default: `http://127.0.0.1`). You will also need to set the `MIGRATIONS_API_TOKEN` variable. The value of that token has to match the token configured in the migrations service.
+API: You can specify the address (and port) of the migrations service instance you use in the `MIGRATIONS_SERVER_ADDRESS` env variable (default: `://127.0.0.1`), to use secure connections (https / wss) set `MIGRATIONS_SECURE` to `true`. You will also need to set the `MIGRATIONS_API_TOKEN` variable. The value of that token has to match the token configured in the migrations service.
 
 Use the `MIGRATIONS_NAMESPACE` env variable to restrict all migrations to your namespace. This is useful if multiple apps share the Fraym services. Note: You cannot name your type or namespace by a `Fraym` prefix. This is a reserved prefix for Fraym apps.
 
