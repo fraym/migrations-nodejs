@@ -109,21 +109,27 @@ export const startMigration = async (
 
         const responseData: Record<string, string> = {};
 
-        Object.keys(data.data).forEach(key => {
+        Object.keys(latestData).forEach(key => {
             responseData[key] = JSON.stringify(latestData[key]);
         });
 
-        ws.send(JSON.stringify(responseData));
+        setTimeout(() => {
+            ws.send(JSON.stringify(responseData));
+        }, 500);
     });
 };
 
-export const finishMigration = async (config: ClientConfig): Promise<void> => {
+export const finishMigration = async (
+    status: Record<string, number>,
+    config: ClientConfig
+): Promise<void> => {
     const response = await fetch(`${config.serverAddress}/api/migration/finish`, {
         method: "POST",
         headers: {
             Authorization: `Bearer ${config.apiToken}`,
             "Content-Type": "application/json",
         },
+        body: JSON.stringify({ status }),
     });
 
     if (!response.ok) {

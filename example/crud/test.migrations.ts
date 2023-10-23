@@ -1,11 +1,11 @@
 import { DataMigrations } from "../../dist/data/migrations";
 
 const migrations: DataMigrations = {
-    crudType: "a",
+    crudType: "CrudTestType",
     migrations: {
-        124: data => {
-            console.log("a", data);
-            return { asd: 123 };
+        5: data => {
+            console.log("CrudTestType", data);
+            return data.data;
         },
     },
 };

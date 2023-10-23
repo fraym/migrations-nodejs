@@ -55,3 +55,7 @@ type TestType {
         )
 }
 ```
+
+## Transformations
+
+-   If a crud type is renamed the transformation has to refer to the last used name, not to the new one

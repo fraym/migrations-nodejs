@@ -75,5 +75,29 @@ export const getRelevantMigrations = async (
         filteredMigrations[migration.crudType] = migrationList;
     }
 
-    return filteredMigrations;
+    const relevantMigrations: Record<string, DataMigration[]> = {};
+
+    Object.keys(filteredMigrations).forEach(crudType => {
+        if (filteredMigrations[crudType].length > 0) {
+            relevantMigrations[crudType] = filteredMigrations[crudType];
+        }
+    });
+
+    return relevantMigrations;
+};
+
+export const getLatestMigrationStatus = async (
+    dataMigrationsGlob: string
+): Promise<Record<string, number>> => {
+    const latestState: Record<string, number> = {};
+
+    const allMigrations = await getAllMigrations(dataMigrationsGlob);
+
+    allMigrations.forEach(migration => {
+        latestState[migration.crudType] = Math.max(
+            ...Object.keys(migration.migrations).map(indexString => parseInt(indexString))
+        );
+    });
+
+    return latestState;
 };
