@@ -1,5 +1,7 @@
 # vNext
 
+# v0.3.0
+
 -   (feature) Add `@renamed` directive
 -   (feature) Add data migrations integration
 -   (bug) Allow `@unique` directive multiple times
