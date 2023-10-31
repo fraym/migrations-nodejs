@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "NodeNext",
+        "declaration": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "moduleResolution": "NodeNext",
+        "lib": ["es2017", "dom"]
+    }
+}

@@ -1,98 +1,89 @@
-#! /usr/bin/env node
-import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
-import { loadSchema } from "@graphql-tools/load";
-import { newClient } from "../api/client";
 import { useConfig } from "./config";
-import { TypeDefinition, getTypeDefinition } from "./definition/typeDefinition";
-import { addNestedTypesToSchema } from "./nestedSchemaData";
+import {
+    finishMigration,
+    getMigrationStatus,
+    registerMigration,
+    rollbackMigration,
+    startMigration,
+} from "../api/migrate";
+import { loadSchema } from "@graphql-tools/load";
+import { replaceEnvPlaceholdersGraphQLFileLoader } from "./loader";
+import { getMigrationFromSchema } from "../schema";
+import { getLatestMigrationStatus } from "../data/migrations";
 
-const run = async () => {
-    const { schemaPointers, namespace, serverAddress, apiToken } = await useConfig();
+export const runGetMigrationStatus = async () => {
+    console.log("get migration status ...");
+    const { serverAddress, serverWsAddress, apiToken } = await useConfig();
 
-    const schema = await loadSchema(schemaPointers, {
-        loaders: [new GraphQLFileLoader()],
-    });
-
-    const definitions = getTypeDefinition(schema, namespace);
-
-    await migrateSchemas(definitions, serverAddress, apiToken, namespace);
+    const status = await getMigrationStatus({ apiToken, serverAddress, serverWsAddress });
+    console.log(status);
 };
 
-const replaceWithEnvData = (str: string): string => {
-    const regex = /{{env\.([a-zA-Z_]+)}}/g;
-    const matches = str.match(regex);
+export const runRegisterMigration = async () => {
+    console.log("registering migration ...");
+    const { schemaGlob, namespace, serverAddress, serverWsAddress, apiToken } = await useConfig();
 
-    const envData: Record<string, string> = {};
+    const schema = await loadSchema(schemaGlob, {
+        loaders: [replaceEnvPlaceholdersGraphQLFileLoader],
+    });
+    const migration = getMigrationFromSchema(schema, namespace, false);
 
-    matches?.forEach(match => {
-        const variable = match.replace("{{env.", "").replace("}}", "");
+    await registerMigration(migration, { apiToken, serverAddress, serverWsAddress });
+    console.log("done registering migration");
+};
 
-        if (!envData[variable]) {
-            envData[variable] = process.env[variable] ?? "";
+export const runStartMigration = async () => {
+    console.log("starting migration");
+    const { serverAddress, serverWsAddress, apiToken, dataMigrationsGlob } = await useConfig();
+
+    await startMigration({ apiToken, serverAddress, serverWsAddress, dataMigrationsGlob });
+    console.log("sucessfully starting migration");
+    console.log("transforming data...");
+};
+
+export const runFinishMigration = async () => {
+    console.log("finishing migration ...");
+    const { serverAddress, serverWsAddress, apiToken, dataMigrationsGlob } = await useConfig();
+
+    const latestStatus = await getLatestMigrationStatus(dataMigrationsGlob);
+
+    await finishMigration(latestStatus, { apiToken, serverAddress, serverWsAddress });
+    console.log("done finishing migration");
+};
+
+export const runRollbackMigration = async () => {
+    console.log("rolling back migration ...");
+    const { serverAddress, serverWsAddress, apiToken } = await useConfig();
+
+    await rollbackMigration({ apiToken, serverAddress, serverWsAddress });
+    console.log("done rolling back migration");
+};
+
+export const runWait = async () => {
+    console.log("waiting for migration to be ready to finish ...");
+    const { serverAddress, serverWsAddress, apiToken } = await useConfig();
+
+    let isReady = false;
+
+    while (!isReady) {
+        const status = await getMigrationStatus({ apiToken, serverAddress, serverWsAddress });
+
+        console.log("current status: ", status);
+
+        if (status && status.projections === "ready for finish") {
+            break;
         }
-    });
 
-    let outputStr = str;
-
-    Object.keys(envData).forEach(key => {
-        outputStr = outputStr.replaceAll(`{{env.${key}}}`, envData[key]);
-    });
-
-    return outputStr;
-};
-
-const migrateSchemas = async (
-    definitions: Record<string, TypeDefinition>,
-    serverAddress: string,
-    apiToken: string,
-    namespace: string
-) => {
-    console.log(`Using Fraym migration server: ${serverAddress}\n`);
-
-    if (namespace) {
-        console.log(`Using namespace: ${namespace}\n`);
+        await sleep(1000);
     }
 
-    const client = await newClient({ serverAddress, apiToken });
-
-    const baseTypesToUse: string[] = [];
-    const nestedTypesToUse: string[] = [];
-    let upsertSchema = "";
-
-    Object.keys(definitions).forEach(newName => {
-        if (!definitions[newName].isBaseType) {
-            return;
-        }
-
-        baseTypesToUse.push(newName);
-        upsertSchema += `\n${definitions[newName].schema}`;
-
-        definitions[newName].nestedTypes.forEach(nestedTypeName => {
-            const nestedSchemaData = addNestedTypesToSchema(
-                definitions,
-                nestedTypeName,
-                nestedTypesToUse
-            );
-
-            if (nestedSchemaData.schema === "") {
-                return;
-            }
-
-            upsertSchema += `\n${nestedSchemaData.schema}`;
-            nestedSchemaData.nestedTypes.forEach(nestedType => {
-                if (!nestedTypesToUse.includes(nestedType)) {
-                    nestedTypesToUse.push(nestedType);
-                }
-            });
-        });
-    });
-
-    upsertSchema = replaceWithEnvData(upsertSchema);
-
-    console.log(`Migrating ${baseTypesToUse.length} types:`);
-    baseTypesToUse.forEach(type => console.log(`- ${type}`));
-
-    await client.migrate(upsertSchema, namespace);
+    console.log("migration is now ready to finish");
 };
 
-run();
+const sleep = async (time: number): Promise<void> => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, time);
+    });
+};

@@ -1,4 +1,8 @@
 enum Permission {
     ## add your permission names here
     TEST_PERMISSION
+    A
+    B
+    C
+    DDA
 }
