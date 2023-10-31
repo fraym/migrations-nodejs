@@ -70,6 +70,10 @@ export const runWait = async () => {
 
         console.log("current status: ", status);
 
+        if (status && status.projections === "failed") {
+            throw new Error("migration failed");
+        }
+
         if (status && status.projections === "ready for finish") {
             break;
         }
@@ -78,6 +82,11 @@ export const runWait = async () => {
     }
 
     console.log("migration is now ready to finish");
+};
+
+export const runWaitAndFinish = async () => {
+    await runWait();
+    await runFinishMigration();
 };
 
 const sleep = async (time: number): Promise<void> => {

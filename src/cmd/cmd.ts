@@ -6,6 +6,7 @@ import {
     runRollbackMigration,
     runStartMigration,
     runWait,
+    runWaitAndFinish,
 } from "./migrations";
 
 const COMMAND_STATUS = "status";
@@ -14,6 +15,7 @@ const COMMAND_START = "start";
 const COMMAND_FINISH = "finish";
 const COMMAND_ROLLBACK = "rollback";
 const COMMAND_WAIT = "wait";
+const COMMAND_WAIT_AND_FINISH = "wait-finish";
 
 const arg = process.argv[2] ?? COMMAND_REGISTER;
 
@@ -35,5 +37,8 @@ switch (arg) {
         break;
     case COMMAND_WAIT:
         runWait();
+        break;
+    case COMMAND_WAIT_AND_FINISH:
+        runWaitAndFinish();
         break;
 }
