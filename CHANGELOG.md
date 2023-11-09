@@ -1,5 +1,9 @@
 # vNext
 
+# v0.4.1
+
+-   (bug) Cleanup migration process
+
 # v0.4.0
 
 -   (feature) Combine wait and finish in a new wait-finish cmd

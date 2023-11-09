@@ -4,14 +4,12 @@ import {
     runGetMigrationStatus,
     runRegisterMigration,
     runRollbackMigration,
-    runStartMigration,
     runWait,
     runWaitAndFinish,
 } from "./migrations";
 
 const COMMAND_STATUS = "status";
 const COMMAND_REGISTER = "register";
-const COMMAND_START = "start";
 const COMMAND_FINISH = "finish";
 const COMMAND_ROLLBACK = "rollback";
 const COMMAND_WAIT = "wait";
@@ -25,9 +23,6 @@ switch (arg) {
         break;
     case COMMAND_REGISTER:
         runRegisterMigration();
-        break;
-    case COMMAND_START:
-        runStartMigration();
         break;
     case COMMAND_FINISH:
         runFinishMigration();

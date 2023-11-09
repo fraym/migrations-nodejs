@@ -4,7 +4,6 @@ import {
     getMigrationStatus,
     registerMigration,
     rollbackMigration,
-    startMigration,
 } from "../api/migrate";
 import { loadSchema } from "@graphql-tools/load";
 import { replaceEnvPlaceholdersGraphQLFileLoader } from "./loader";
@@ -30,15 +29,6 @@ export const runRegisterMigration = async () => {
 
     await registerMigration(migration, { apiToken, serverAddress, serverWsAddress });
     console.log("done registering migration");
-};
-
-export const runStartMigration = async () => {
-    console.log("starting migration");
-    const { serverAddress, serverWsAddress, apiToken, dataMigrationsGlob } = await useConfig();
-
-    await startMigration({ apiToken, serverAddress, serverWsAddress, dataMigrationsGlob });
-    console.log("sucessfully starting migration");
-    console.log("transforming data...");
 };
 
 export const runFinishMigration = async () => {
