@@ -49,7 +49,7 @@ const getTypes = (
                 directives: getObjectDirectives(t),
                 fields: getObjectFields(t, namespace),
             });
-        } else if (hasDirective(t, "upsertOn")) {
+        } else if (hasDirective(t, "upsertOn") || hasDirective(t, "dangerouslyUpsertOn")) {
             projectionTypes.push({
                 name,
                 directives: getObjectDirectives(t),

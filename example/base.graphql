@@ -61,7 +61,7 @@ directive @fromJwtData(key: String!) on FIELD_DEFINITION
 scalar EventEnvelope
 
 input EventSelector {
-    topics: [String!]
+    topic: String!
     eventTypes: [String!]
 }
 

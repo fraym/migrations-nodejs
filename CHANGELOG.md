@@ -1,5 +1,10 @@
 # vNext
 
+# v0.5.0
+
+-   (feature) Add `dangerouslyUpsertOn` support
+-   (bc) Update `upsertOn` and `removeOn` argument structure
+
 # v0.4.1
 
 -   (bug) Cleanup migration process

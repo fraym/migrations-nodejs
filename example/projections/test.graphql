@@ -1,6 +1,6 @@
 type TestProjection
     @permission(all: [])
-    @upsertOn(on: { eventTypes: ["testType"], topics: ["test"] }, identifyBy: { payload: ["id"] }) {
+    @upsertOn(on: { topic: "test", eventTypes: ["testType"] }, identifyBy: { payload: ["id"] }) {
     field: String! @index
     nested: NestedType
     enum: Enum
