@@ -29,7 +29,7 @@ const getAllMigrations = async (dataMigrationsGlob: string): Promise<DataMigrati
             strict: true,
             skipLibCheck: true,
             esModuleInterop: true,
-            moduleResolution: "node",
+            moduleResolution: "NodeNext",
             lib: ["es2017", "dom"],
         },
     });
@@ -41,7 +41,7 @@ const getAllMigrations = async (dataMigrationsGlob: string): Promise<DataMigrati
             const { default: module } = await import(process.cwd() + "/" + file);
             migrations = module;
         } catch (error) {
-            throw new Error(`Failed to load ${file}`);
+            throw new Error(`Failed to load ${file}: ${error}`);
         }
 
         allMigrations.push(migrations);

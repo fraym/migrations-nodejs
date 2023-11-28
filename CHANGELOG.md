@@ -1,5 +1,9 @@
 # vNext
 
+# v0.5.1
+
+-   (bug) Reimplement namespacing
+
 # v0.5.0
 
 -   (feature) Add `dangerouslyUpsertOn` support

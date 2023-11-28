@@ -7,6 +7,8 @@ export interface ClientConfig {
     serverWsAddress: string;
     // apiToken: auth token for the api
     apiToken: string;
+    // namespace: namespace for the api
+    namespace: string;
 }
 
 export const getEnvConfig = (): ClientConfig => {
@@ -27,6 +29,7 @@ export const getEnvConfig = (): ClientConfig => {
             ? `${wsProtocoll}${process.env.MIGRATIONS_SERVER_ADDRESS}`
             : "",
         apiToken: process.env.MIGRATIONS_API_TOKEN ?? "",
+        namespace: process.env.MIGRATIONS_NAMESPACE ?? "",
     };
 };
 
@@ -39,5 +42,6 @@ export const useConfigDefaults = (config?: ClientConfig): Required<ClientConfig>
         serverAddress: config.serverAddress,
         serverWsAddress: config.serverWsAddress,
         apiToken: config.apiToken,
+        namespace: config.namespace,
     };
 };

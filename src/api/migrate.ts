@@ -5,14 +5,17 @@ export const registerMigration = async (
     migration: Migration,
     config: ClientConfig
 ): Promise<void> => {
-    const response = await fetch(`${config.serverAddress}/api/migration/register`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${config.apiToken}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(migration),
-    });
+    const response = await fetch(
+        `${config.serverAddress}/api/migration/register?namespace=${config.namespace}`,
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${config.apiToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(migration),
+        }
+    );
 
     if (!response.ok) {
         throw new Error(await response.text());
@@ -26,13 +29,16 @@ export interface MigrationStatus {
 }
 
 export const getMigrationStatus = async (config: ClientConfig): Promise<MigrationStatus> => {
-    const response = await fetch(`${config.serverAddress}/api/migration/status`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${config.apiToken}`,
-            "Content-Type": "application/json",
-        },
-    });
+    const response = await fetch(
+        `${config.serverAddress}/api/migration/status?namespace=${config.namespace}`,
+        {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${config.apiToken}`,
+                "Content-Type": "application/json",
+            },
+        }
+    );
 
     if (!response.ok) {
         throw new Error(await response.text());
@@ -45,14 +51,17 @@ export const finishMigration = async (
     status: Record<string, number>,
     config: ClientConfig
 ): Promise<void> => {
-    const response = await fetch(`${config.serverAddress}/api/migration/finish`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${config.apiToken}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-    });
+    const response = await fetch(
+        `${config.serverAddress}/api/migration/finish?namespace=${config.namespace}`,
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${config.apiToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status }),
+        }
+    );
 
     if (!response.ok) {
         throw new Error(await response.text());
@@ -60,13 +69,16 @@ export const finishMigration = async (
 };
 
 export const rollbackMigration = async (config: ClientConfig): Promise<void> => {
-    const response = await fetch(`${config.serverAddress}/api/migration/rollback`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${config.apiToken}`,
-            "Content-Type": "application/json",
-        },
-    });
+    const response = await fetch(
+        `${config.serverAddress}/api/migration/rollback?namespace=${config.namespace}`,
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${config.apiToken}`,
+                "Content-Type": "application/json",
+            },
+        }
+    );
 
     if (!response.ok) {
         throw new Error(await response.text());

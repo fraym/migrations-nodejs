@@ -1,7 +1,5 @@
 type CrudTestType @crudType @renamed(prev: ["OldCrudType"]) {
-    nst: NestedCrudType
-    field1: Boolean! @default(value: true)
-    field3: Boolean! @renamed(prev: ["oldField", "veryOldField"])
+    name: String
 }
 
 type NestedCrudType {
