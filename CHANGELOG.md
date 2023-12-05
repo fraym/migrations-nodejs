@@ -1,5 +1,7 @@
 # vNext
 
+-   (internal) Update `base.graphql` and `projections/test.graphql`
+
 # v0.5.1
 
 -   (bug) Reimplement namespacing

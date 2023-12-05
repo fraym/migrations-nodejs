@@ -1,15 +1,32 @@
 type TestProjection
     @permission(all: [])
-    @upsertOn(on: { topic: "test", eventTypes: ["testType"] }, identifyBy: { payload: ["id"] }) {
+    @upsertOn(
+        on: { topic: "test", eventTypes: ["testType"] }
+        filterBy: {
+            fields: [
+                {
+                    projectionField: "field"
+                    eventField: "field"
+                    type: "String!"
+                    operation: "equals"
+                }
+            ]
+        }
+    )
+    @removeOn(
+        on: { topic: "test", eventTypes: ["removeTestType"] }
+        filterBy: {
+            fields: [
+                {
+                    projectionField: "field"
+                    eventField: "field"
+                    type: "String!"
+                    operation: "equals"
+                }
+            ]
+        }
+    ) {
     field: String! @index
-    nested: NestedType
-    enum: Enum
-    ref: CrudTestType
-}
-
-type NestedType {
-    field: Int
-    nested: NestedType
 }
 
 # # all directives can be used repeatedly

@@ -70,8 +70,29 @@ input IdentifyByOptions {
     payload: [String!]
 }
 
-directive @upsertOn(on: EventSelector!, identifyBy: IdentifyByOptions) repeatable on OBJECT
-directive @removeOn(on: EventSelector!, identifyBy: IdentifyByOptions!) repeatable on OBJECT
+input Filter {
+    fields: [FieldFilter!]
+    and: [Filter!]
+    or: [Filter!]
+}
+
+input FieldFilter {
+    projectionField: String!
+    eventField: String!
+    type: String!
+    operation: String!
+}
+
+directive @upsertOn(
+    on: EventSelector!
+    identifyBy: IdentifyByOptions
+    filterBy: Filter
+) repeatable on OBJECT
+directive @removeOn(
+    on: EventSelector!
+    identifyBy: IdentifyByOptions
+    filterBy: Filter
+) repeatable on OBJECT
 directive @global on OBJECT
 
 ## crud only
