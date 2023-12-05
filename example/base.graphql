@@ -88,7 +88,17 @@ directive @upsertOn(
     identifyBy: IdentifyByOptions
     filterBy: Filter
 ) repeatable on OBJECT
+directive @dangerouslyUpsertOn(
+    on: EventSelector!
+    identifyBy: IdentifyByOptions
+    filterBy: Filter
+) repeatable on OBJECT
 directive @removeOn(
+    on: EventSelector!
+    identifyBy: IdentifyByOptions
+    filterBy: Filter
+) repeatable on OBJECT
+directive @dangerouslyRemoveOn(
     on: EventSelector!
     identifyBy: IdentifyByOptions
     filterBy: Filter
