@@ -1,5 +1,8 @@
 # vNext
 
+# v0.6.0
+
+-   (feature) Add `@readonly` and `@cloneField` directives
 -   (internal) Update `base.graphql` and `projections/test.graphql`
 
 # v0.5.1

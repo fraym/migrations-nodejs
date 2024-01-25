@@ -107,3 +107,5 @@ directive @global on OBJECT
 
 ## crud only
 directive @crudType on OBJECT
+directive @readonly on FIELD_DEFINITION
+directive @cloneField(field: String!) on FIELD_DEFINITION

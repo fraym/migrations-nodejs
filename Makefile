@@ -11,7 +11,6 @@ dev-stop: ## Removes the projections-nodejs services dev environment from the mi
 	kubectl delete -f .k8s/2-deployment.yml
 	kubectl delete -f .k8s/1-service.yml
 
-.PHONY: lint
 lint: ## Run linters
 	npm run format
 	npm run lint
