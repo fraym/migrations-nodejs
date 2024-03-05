@@ -75,7 +75,10 @@ export const runWait = async () => {
             throw new Error("migration failed");
         }
 
-        if (status && status.projections === "ready for finish") {
+        if (
+            status &&
+            (status.projections === "ready for finish" || status.projections === "done")
+        ) {
             break;
         }
 

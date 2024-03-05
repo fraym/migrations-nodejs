@@ -1,5 +1,9 @@
 # vNext
 
+# v0.6.1
+
+-   (improvement) Allow migraitons without changes
+
 # v0.6.0
 
 -   (feature) Add `@readonly` and `@cloneField` directives
