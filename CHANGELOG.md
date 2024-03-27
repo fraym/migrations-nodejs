@@ -1,5 +1,9 @@
 # vNext
 
+# v0.7.0
+
+-   (bc) Split finish migration into apply and cleanup
+
 # v0.6.1
 
 -   (improvement) Allow migraitons without changes

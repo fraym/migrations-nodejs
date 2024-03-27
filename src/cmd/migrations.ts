@@ -1,6 +1,7 @@
 import { useConfig } from "./config";
 import {
-    finishMigration,
+    applyMigration,
+    cleanupMigration,
     getMigrationStatus,
     registerMigration,
     rollbackMigration,
@@ -36,15 +37,28 @@ export const runRegisterMigration = async () => {
     console.log("done registering migration");
 };
 
-export const runFinishMigration = async () => {
-    console.log("finishing migration ...");
+export const runApplyMigration = async () => {
+    console.log("apply migration ...");
+    const { serverAddress, serverWsAddress, apiToken, namespace } = await useConfig();
+
+    await applyMigration({ apiToken, serverAddress, serverWsAddress, namespace });
+    console.log("done apply migration");
+};
+
+export const runCleanupMigration = async () => {
+    console.log("cleanup migration ...");
     const { serverAddress, serverWsAddress, apiToken, dataMigrationsGlob, namespace } =
         await useConfig();
 
-    const latestStatus = await getLatestMigrationStatus(dataMigrationsGlob);
+    const latestMigrationStatus = await getLatestMigrationStatus(dataMigrationsGlob);
 
-    await finishMigration(latestStatus, { apiToken, serverAddress, serverWsAddress, namespace });
-    console.log("done finishing migration");
+    await cleanupMigration(latestMigrationStatus, {
+        apiToken,
+        serverAddress,
+        serverWsAddress,
+        namespace,
+    });
+    console.log("done cleanup migration");
 };
 
 export const runRollbackMigration = async () => {
@@ -88,9 +102,9 @@ export const runWait = async () => {
     console.log("migration is now ready to finish");
 };
 
-export const runWaitAndFinish = async () => {
+export const runWaitAndApply = async () => {
     await runWait();
-    await runFinishMigration();
+    await runApplyMigration();
 };
 
 const sleep = async (time: number): Promise<void> => {

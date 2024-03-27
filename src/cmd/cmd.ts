@@ -1,16 +1,18 @@
 #! /usr/bin/env node
 import {
-    runFinishMigration,
+    runApplyMigration,
+    runCleanupMigration,
     runGetMigrationStatus,
     runRegisterMigration,
     runRollbackMigration,
     runWait,
-    runWaitAndFinish,
+    runWaitAndApply,
 } from "./migrations";
 
 const COMMAND_STATUS = "status";
 const COMMAND_REGISTER = "register";
-const COMMAND_FINISH = "finish";
+const COMMAND_APPLY = "apply";
+const COMMAND_CLEANUP = "cleanup";
 const COMMAND_ROLLBACK = "rollback";
 const COMMAND_WAIT = "wait";
 const COMMAND_WAIT_AND_FINISH = "wait-finish";
@@ -24,8 +26,8 @@ switch (arg) {
     case COMMAND_REGISTER:
         runRegisterMigration();
         break;
-    case COMMAND_FINISH:
-        runFinishMigration();
+    case COMMAND_APPLY:
+        runApplyMigration();
         break;
     case COMMAND_ROLLBACK:
         runRollbackMigration();
@@ -34,6 +36,9 @@ switch (arg) {
         runWait();
         break;
     case COMMAND_WAIT_AND_FINISH:
-        runWaitAndFinish();
+        runWaitAndApply();
+        break;
+    case COMMAND_CLEANUP:
+        runCleanupMigration();
         break;
 }

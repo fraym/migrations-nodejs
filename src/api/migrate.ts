@@ -47,12 +47,29 @@ export const getMigrationStatus = async (config: ClientConfig): Promise<Migratio
     return await response.json();
 };
 
-export const finishMigration = async (
+export const applyMigration = async (config: ClientConfig): Promise<void> => {
+    const response = await fetch(
+        `${config.serverAddress}/api/migration/apply?namespace=${config.namespace}`,
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${config.apiToken}`,
+                "Content-Type": "application/json",
+            },
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+};
+
+export const cleanupMigration = async (
     status: Record<string, number>,
     config: ClientConfig
 ): Promise<void> => {
     const response = await fetch(
-        `${config.serverAddress}/api/migration/finish?namespace=${config.namespace}`,
+        `${config.serverAddress}/api/migration/cleanup?namespace=${config.namespace}`,
         {
             method: "POST",
             headers: {
