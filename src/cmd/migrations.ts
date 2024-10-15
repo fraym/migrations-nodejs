@@ -31,22 +31,25 @@ export const runRegisterMigration = async () => {
     const schema = await loadSchema(schemaGlob, {
         loaders: [replaceEnvPlaceholdersGraphQLFileLoader],
     });
-    const migration = getMigrationFromSchema(schema, namespace, false);
+    const migration = await getMigrationFromSchema(schema, namespace, false);
 
-    await registerMigration(migration, { apiToken, serverAddress, serverWsAddress, namespace });
+    await registerMigration(
+        { ...migration },
+        { apiToken, serverAddress, serverWsAddress, namespace }
+    );
     console.log("done registering migration");
 };
 
 export const runApplyMigration = async () => {
-    console.log("apply migration ...");
+    console.log("applying migration ...");
     const { serverAddress, serverWsAddress, apiToken, namespace } = await useConfig();
 
     await applyMigration({ apiToken, serverAddress, serverWsAddress, namespace });
-    console.log("done apply migration");
+    console.log("done applying migration");
 };
 
 export const runCleanupMigration = async () => {
-    console.log("cleanup migration ...");
+    console.log("cleaning up migration ...");
     const { serverAddress, serverWsAddress, apiToken, dataMigrationsGlob, namespace } =
         await useConfig();
 
@@ -58,7 +61,7 @@ export const runCleanupMigration = async () => {
         serverWsAddress,
         namespace,
     });
-    console.log("done cleanup migration");
+    console.log("done cleaning up migration");
 };
 
 export const runRollbackMigration = async () => {

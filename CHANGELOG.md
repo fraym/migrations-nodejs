@@ -1,5 +1,9 @@
 # vNext
 
+# v0.8.0
+
+-   (feature) View projections
+
 # v0.7.0
 
 -   (bc) Split finish migration into apply and cleanup

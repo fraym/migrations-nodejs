@@ -5,6 +5,14 @@ export interface Migration {
     projectionTypes: ProjectionType[];
     enums: EnumType[];
     nestedTypes: NestedType[];
+    views: View[];
+}
+
+export interface View {
+    name: string;
+    sql: string;
+    directives: TypeDirective[];
+    fields: TypeField[];
 }
 
 export interface CrudType {
